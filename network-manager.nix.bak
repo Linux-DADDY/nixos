@@ -1,0 +1,61 @@
+{pkgs, ...}: {
+  # Network configuration with NEXTDNS/DNS
+  networking.networkmanager.enable = true;
+  services.resolved.enable = true;
+  networking.networkmanager.dns = "systemd-resolved";
+  networking.firewall.checkReversePath = "loose";
+  # services.resolved.extraConfig = ''
+  #   DNS=45.90.28.0#6b38b9.dns.nextdns.io
+  #   DNS=2a07:a8c0::#6b38b9.dns.nextdns.io
+  #   DNS=45.90.30.0#6b38b9.dns.nextdns.io
+  #   DNS=2a07:a8c1::#6b38b9.dns.nextdns.io
+  #   DNSOverTLS=yes
+  # '';
+
+  # Firewall.
+  networking.firewall = {
+    enable = true;
+    allowedTCPPorts = [80 443];
+    allowedUDPPortRanges = [
+      {
+        from = 4000;
+        to = 4007;
+      }
+      {
+        from = 8000;
+        to = 8010;
+      }
+    ];
+  };
+
+  # # VPN Config
+  # networking.wg-quick.interfaces = let
+  #   server_ip = "18.19.23.66";
+  # in {
+  #   wg0 = {
+  #     # IP address of this machine in the *tunnel network*
+  #     address = [
+  #       "10.2.0.2/32"
+  #       # "fdc9:281f:04d7:9ee9::2/64"
+  #     ];
+
+  #     privateKey = "8InOdWlZzamwWbCbomeaOwxexekfW8Plr2/EZmuSF0E=";
+
+  #     # To match firewall allowedUDPPorts (without this wg
+  #     # uses random port numbers).
+  #     listenPort = 51820;
+
+  #     # Path to the private key file.
+  #     # privateKeyFile = "/etc/mullvad-vpn.key";
+
+  #     peers = [
+  #       {
+  #         publicKey = "hc5/jolTT72oU7vbiFruJ20LtWU2I/T19E3/15ax6yw=";
+  #         allowedIPs = ["0.0.0.0/0"];
+  #         endpoint = "${server_ip}:51820";
+  #         # persistentKeepalive = 25;
+  #       }
+  #     ];
+  #   };
+  # };
+}
